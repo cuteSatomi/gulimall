@@ -3,12 +3,21 @@ server:
   port: 9000
 
 spring:
+  application:
+    name: gulimall-order
+
   # 数据源配置
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://172.16.27.130:3306/gulimall_oms
     username: root
     password: 123
+
+  # nacos配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 mybatis-plus:
   # xml文件位置配置
