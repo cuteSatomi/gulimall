@@ -2,9 +2,11 @@ package com.zzx.gulimall.product.controller;
 
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.R;
+import com.zzx.common.valid.AddGroup;
 import com.zzx.gulimall.product.entity.BrandEntity;
 import com.zzx.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -52,7 +54,7 @@ public class BrandController {
      */
     @RequestMapping("/save")
     // @RequiresPermissions("product:brand:save")
-    public R save(@RequestBody BrandEntity brand) {
+    public R save(@Validated({AddGroup.class}) @RequestBody BrandEntity brand) {
         brandService.save(brand);
 
         return R.ok();
