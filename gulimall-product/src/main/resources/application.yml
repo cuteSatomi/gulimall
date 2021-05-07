@@ -23,5 +23,6 @@ mybatis-plus:
       logic-delete-value: 1                                   # 逻辑已删除
       logic-not-delete-value: 0                               # 逻辑未删除
 
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl     # mybatis日志打印
+logging:
+  level:
+    com.zzx.gulimall: debug

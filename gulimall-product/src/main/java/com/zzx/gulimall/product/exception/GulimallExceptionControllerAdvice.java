@@ -1,4 +1,4 @@
-package com.zzx.gulimall.product;
+package com.zzx.gulimall.product.exception;
 
 import com.zzx.common.gulienum.BizCodeEnum;
 import com.zzx.common.utils.R;
