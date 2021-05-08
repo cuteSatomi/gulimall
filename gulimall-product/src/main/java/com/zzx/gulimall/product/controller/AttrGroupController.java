@@ -4,6 +4,7 @@ import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.R;
 import com.zzx.gulimall.product.entity.AttrGroupEntity;
 import com.zzx.gulimall.product.service.AttrGroupService;
+import com.zzx.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,9 @@ public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     /**
      * 列表
      */
@@ -44,7 +48,8 @@ public class AttrGroupController {
     // @RequiresPermissions("product:attrgroup:info")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
-
+		// 给attrGroup设置完整的分组路径
+        categoryService.setCatelogPath(attrGroup);
         return R.ok().put("attrGroup", attrGroup);
     }
 

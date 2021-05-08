@@ -2,6 +2,7 @@ package com.zzx.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzx.common.utils.PageUtils;
+import com.zzx.gulimall.product.entity.AttrGroupEntity;
 import com.zzx.gulimall.product.entity.CategoryEntity;
 
 import java.util.List;
@@ -23,5 +24,17 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> listWithTree();
+
+    /**
+     * 为attrGroup设置完整的分组路径
+     * @param attrGroup
+     */
+    void setCatelogPath(AttrGroupEntity attrGroup);
+
+    /**
+     * 更新category的细节，包括其他表中关于category表的冗余字段
+     * @param category
+     */
+    void updateDetail(CategoryEntity category);
 }
 
