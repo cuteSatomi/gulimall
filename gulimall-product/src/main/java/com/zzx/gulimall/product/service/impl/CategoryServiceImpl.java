@@ -78,7 +78,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * @param catelogId
      * @param paths
      */
-    private void findParentPath(Long catelogId, List<Long> paths) {
+    public void findParentPath(Long catelogId, List<Long> paths) {
         CategoryEntity entity = this.getById(catelogId);
         paths.add(catelogId);
         if (entity.getParentCid() != 0) {
@@ -93,7 +93,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * @param all
      * @return
      */
-    private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {
+    public List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {
         List<CategoryEntity> children = all.stream()
                 .filter(category -> category.getParentCid().equals(root.getCatId()))
                 .peek(category -> category.setChildren(getChildren(category, all)))

@@ -3,6 +3,7 @@ package com.zzx.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.gulimall.product.entity.AttrGroupEntity;
+import com.zzx.gulimall.product.vo.request.AttrGroupRelationVO;
 
 import java.util.Map;
 
@@ -18,5 +19,12 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     PageUtils queryPage(Map<String, Object> params, Long catelogId);
+
+    /**
+     * 删除分组和属性的关联
+     * @param attrRelationVOS
+     * @return
+     */
+    void deleteAttrRelation(AttrGroupRelationVO[] attrRelationVOS);
 }
 
