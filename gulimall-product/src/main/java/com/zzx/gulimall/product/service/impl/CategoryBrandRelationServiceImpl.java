@@ -16,7 +16,10 @@ import com.zzx.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("categoryBrandRelationService")
@@ -70,6 +73,24 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         relationEntity.setCatelogId(catId);
         relationEntity.setCatelogName(name);
         this.update(relationEntity, new UpdateWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+    }
+
+    /**
+     * 根据分类id查询出与分类相关联的品牌
+     * @param catId
+     * @return
+     */
+    @Override
+    public List<BrandEntity> relationBrandsList(Long catId) {
+        // 从关联表中查询出相关分类的所有品牌
+        List<CategoryBrandRelationEntity> relationEntities = baseMapper.selectList(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        // 收集品牌的id
+        List<Long> brandIds = relationEntities.stream().map(CategoryBrandRelationEntity::getBrandId).collect(Collectors.toList());
+        // 根据id集合查询品牌
+        Collection<BrandEntity> brandList = brandService.listByIds(brandIds);
+
+        return (List<BrandEntity>) brandList;
     }
 
 }
