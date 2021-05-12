@@ -3,16 +3,20 @@ package com.zzx.gulimall.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zzx.common.to.SkuReductionTO;
+import com.zzx.common.to.SpuBoundTO;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.Query;
 import com.zzx.gulimall.product.dao.SpuInfoDao;
 import com.zzx.gulimall.product.entity.*;
+import com.zzx.gulimall.product.feign.CouponFeignService;
 import com.zzx.gulimall.product.service.*;
 import com.zzx.gulimall.product.vo.request.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -43,6 +47,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @Autowired
+    private CouponFeignService couponFeignService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -95,6 +102,11 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         attrValueService.saveProductAttr(collect);
 
         // 保存spu的积分信息
+        Bounds bounds = vo.getBounds();
+        SpuBoundTO spuBoundTO = new SpuBoundTO();
+        BeanUtils.copyProperties(bounds, spuBoundTO);
+        spuBoundTO.setSpuId(infoEntity.getId());
+        couponFeignService.saveBounds(spuBoundTO);
 
         // 保存当前spu对应的所有sku信息
         // sku的基本信息
@@ -136,10 +148,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     return attrValueEntity;
                 }).collect(Collectors.toList());
                 skuSaleAttrValueService.saveBatch(skuSaleAttrValueEntities);
+
+                // sku的优惠，满减等信息
+                SkuReductionTO skuReductionTO = new SkuReductionTO();
+                BeanUtils.copyProperties(item, skuReductionTO);
+                skuReductionTO.setSkuId(skuId);
+                couponFeignService.saveSkuReduction(skuReductionTO);
             });
         }
-
-        // sku的优惠，满减等信息
     }
 
     /**
@@ -149,6 +165,36 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
      */
     public void saveBaseSpuInfo(SpuInfoEntity infoEntity) {
         baseMapper.insert(infoEntity);
+    }
+
+    /**
+     * 根据条件查询spu
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public PageUtils queryPageByCondition(Map<String, Object> params) {
+        QueryWrapper<SpuInfoEntity> wrapper = new QueryWrapper<>();
+        String key = (String) params.get("key");
+        if (!StringUtils.isEmpty(key)) {
+            wrapper.and(w -> w.eq("id", key).or().like("spu_name", key));
+        }
+        String status = (String) params.get("status");
+        if (!StringUtils.isEmpty(status)) {
+            wrapper.eq("publish_status", status);
+        }
+        String brandId = (String) params.get("brandId");
+        if (!StringUtils.isEmpty(brandId)) {
+            wrapper.eq("brand_id", brandId);
+        }
+        String catelogId = (String) params.get("catelogId");
+        if (!StringUtils.isEmpty(catelogId)) {
+            wrapper.eq("catalog_id", catelogId);
+        }
+        IPage<SpuInfoEntity> page = this.page(new Query<SpuInfoEntity>().getPage(params), wrapper);
+
+        return new PageUtils(page);
     }
 
 
