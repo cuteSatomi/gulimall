@@ -66,7 +66,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
      *
      * @param vo
      */
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void saveSpuInfo(SpuSaveVO vo) {
         // 保存spu基本信息
@@ -120,7 +120,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     }
                 }
                 SkuInfoEntity skuInfoEntity = new SkuInfoEntity();
-                BeanUtils.copyProperties(images, skuInfoEntity);
+                BeanUtils.copyProperties(item, skuInfoEntity);
                 skuInfoEntity.setBrandId(infoEntity.getBrandId());
                 skuInfoEntity.setCatalogId(infoEntity.getCatalogId());
                 skuInfoEntity.setSaleCount(0L);
@@ -163,6 +163,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
      *
      * @param infoEntity
      */
+    @Override
     public void saveBaseSpuInfo(SpuInfoEntity infoEntity) {
         baseMapper.insert(infoEntity);
     }
