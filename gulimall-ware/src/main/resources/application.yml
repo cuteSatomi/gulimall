@@ -6,10 +6,14 @@ spring:
   application:
     name: gulimall-ware
 
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.16.27.130:3306/gulimall_wms
+#    url: jdbc:mysql://172.16.27.130:3306/gulimall_wms
+    url: jdbc:mysql://192.168.56.10:3306/gulimall_wms
     username: root
     password: 123
 
@@ -26,3 +30,7 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+logging:
+  level:
+    com.zzx: debug

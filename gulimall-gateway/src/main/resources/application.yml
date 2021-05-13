@@ -48,6 +48,14 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        # 库存服务的路由
+        - id: ware_route
+          uri: lb://gulimall-ware
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: admin_route
           uri: lb://renren-fast
           # 前端发送的所有请求前面会带上api，都会经过网关
