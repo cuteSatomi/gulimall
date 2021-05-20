@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 
-
 /**
  * spu信息
  *
@@ -27,11 +26,24 @@ public class SpuInfoController {
     private SpuInfoService spuInfoService;
 
     /**
+     * 商品上架功能
+     *
+     * @param spuId
+     * @return
+     */
+    @PostMapping("/{spuId}/up")
+    public R spuUp(@PathVariable Long spuId) {
+        spuInfoService.up(spuId);
+
+        return R.ok();
+    }
+
+    /**
      * 列表
      */
     @RequestMapping("/list")
     // @RequiresPermissions("product:spuinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = spuInfoService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
@@ -43,8 +55,8 @@ public class SpuInfoController {
      */
     @RequestMapping("/info/{id}")
     // @RequiresPermissions("product:spuinfo:info")
-    public R info(@PathVariable("id") Long id){
-		SpuInfoEntity spuInfo = spuInfoService.getById(id);
+    public R info(@PathVariable("id") Long id) {
+        SpuInfoEntity spuInfo = spuInfoService.getById(id);
 
         return R.ok().put("spuInfo", spuInfo);
     }
@@ -54,8 +66,8 @@ public class SpuInfoController {
      */
     @RequestMapping("/save")
     // @RequiresPermissions("product:spuinfo:save")
-    public R save(@RequestBody SpuSaveVO vo){
-		spuInfoService.saveSpuInfo(vo);
+    public R save(@RequestBody SpuSaveVO vo) {
+        spuInfoService.saveSpuInfo(vo);
 
         return R.ok();
     }
@@ -65,8 +77,8 @@ public class SpuInfoController {
      */
     @RequestMapping("/update")
     // @RequiresPermissions("product:spuinfo:update")
-    public R update(@RequestBody SpuInfoEntity spuInfo){
-		spuInfoService.updateById(spuInfo);
+    public R update(@RequestBody SpuInfoEntity spuInfo) {
+        spuInfoService.updateById(spuInfo);
 
         return R.ok();
     }
@@ -76,8 +88,8 @@ public class SpuInfoController {
      */
     @RequestMapping("/delete")
     // @RequiresPermissions("product:spuinfo:delete")
-    public R delete(@RequestBody Long[] ids){
-		spuInfoService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] ids) {
+        spuInfoService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }
