@@ -1,5 +1,6 @@
 package com.zzx.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,6 +19,7 @@ import com.zzx.gulimall.product.feign.SearchFeignService;
 import com.zzx.gulimall.product.feign.WareFeignService;
 import com.zzx.gulimall.product.service.*;
 import com.zzx.gulimall.product.vo.request.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Service("spuInfoService")
 public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> implements SpuInfoService {
 
@@ -243,8 +245,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         // TODO 发送远程调用查询是否有库存
         Map<Long, Boolean> stockMap = null;
         try {
-            R<List<SkuHasStockTO>> hasStock = wareFeignService.getSkusHasStock(skuIdList);
-            stockMap = hasStock.getData().stream().collect(Collectors.toMap(SkuHasStockTO::getSkuId, item -> item.getHasStock()));
+            R r = wareFeignService.getSkusHasStock(skuIdList);
+            TypeReference<List<SkuHasStockTO>> typeReference = new TypeReference<List<SkuHasStockTO>>() {
+            };
+            stockMap = r.getData(typeReference).stream().collect(Collectors.toMap(SkuHasStockTO::getSkuId, item -> item.getHasStock()));
         } catch (Exception e) {
             log.error("远程查询库存服务出现异常，原因{}", e);
         }

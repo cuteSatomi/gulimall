@@ -32,8 +32,8 @@ public class ProductConstant {
         /** 新建 */
         SPU_NEW(0, "新建"),
         /** 上架 */
-        SPU_UP(0, "上架"),
-        SPU_DOWN(0, "下架");
+        SPU_UP(1, "上架"),
+        SPU_DOWN(2, "下架");
 
         private Integer code;
         private String msg;

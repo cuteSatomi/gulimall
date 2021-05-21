@@ -49,7 +49,9 @@ public class ProductSaveServiceImpl implements ProductSaveService {
 
         // TODO 如果批量出现错误
         boolean b = responses.hasFailures();
-        log.error("商品上架错误");
+        if (b) {
+            log.error("商品上架错误");
+        }
 
     }
 }

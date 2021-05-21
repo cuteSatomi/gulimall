@@ -20,7 +20,7 @@
     <select id="selectSearchAttrsIds" resultType="java.lang.Long">
         select attr_id from pms_attr where attr_id in
         <foreach collection="attrIds" item="attrId" separator="," open="(" close=")">
-            attrId
+            #{attrId}
         </foreach>
         and search_type = 1
     </select>
