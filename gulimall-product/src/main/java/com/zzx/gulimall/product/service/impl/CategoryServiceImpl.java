@@ -1,5 +1,7 @@
 package com.zzx.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,7 +13,9 @@ import com.zzx.gulimall.product.entity.CategoryEntity;
 import com.zzx.gulimall.product.service.CategoryBrandRelationService;
 import com.zzx.gulimall.product.service.CategoryService;
 import com.zzx.gulimall.product.vo.web.Catelog2VO;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +28,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private RedissonClient redisson;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -84,23 +94,44 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     }
 
     /**
-     * 查出所有分类
+     * 查出所有分类，有缓存则走缓存，高并发存在线程安全问题
      *
      * @return
      */
     @Override
     public Map<String, List<Catelog2VO>> getCatalogJson() {
+        String catalogJson = redisTemplate.opsForValue().get("catalogJson");
+        if (StringUtils.isEmpty(catalogJson)) {
+            // redis中没有该数据，则查询数据库
+            Map<String, List<Catelog2VO>> catalogJsonFromDb = getCatalogJsonFromDb();
+            redisTemplate.opsForValue().set("catalogJson", JSON.toJSONString(catalogJsonFromDb));
+            return catalogJsonFromDb;
+        }
+
+        return JSON.parseObject(catalogJson,
+                new TypeReference<Map<String, List<Catelog2VO>>>() {
+                });
+    }
+
+    /**
+     * 从数据库查出所有分类
+     *
+     * @return
+     */
+    public Map<String, List<Catelog2VO>> getCatalogJsonFromDb() {
+        // 查出所有分类
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
         // 查出所有1级分类
-        List<CategoryEntity> level1Categories = getLevel1Categories();
+        List<CategoryEntity> level1Categories = getParentCid(selectList, 0L);
         Map<String, List<Catelog2VO>> map = level1Categories.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
             // 查询当前一级分类下的所有二级分类
-            List<CategoryEntity> l2CategoryList = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+            List<CategoryEntity> l2CategoryList = getParentCid(selectList, v.getCatId());
             List<Catelog2VO> catelog2VOS = null;
             if (l2CategoryList != null && l2CategoryList.size() > 0) {
                 catelog2VOS = l2CategoryList.stream().map(l2 -> {
                     Catelog2VO catelog2VO = new Catelog2VO(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
                     // 再根据当前二级分类id查询所有三级分类
-                    List<CategoryEntity> l3CategoryList = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", l2.getCatId()));
+                    List<CategoryEntity> l3CategoryList = getParentCid(selectList, l2.getCatId());
                     if (l3CategoryList != null && l3CategoryList.size() > 0) {
                         List<Catelog2VO.Catelog3VO> collect = l3CategoryList.stream().map(l3 -> {
                             Catelog2VO.Catelog3VO catelog3VO = new Catelog2VO.Catelog3VO(l2.getCatId().toString(), l3.getCatId().toString(), l3.getName());
@@ -114,6 +145,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return catelog2VOS;
         }));
         return map;
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList, Long parentCid) {
+        return selectList.stream()
+                .filter(item -> item.getParentCid().equals(parentCid)).collect(Collectors.toList());
     }
 
     /**

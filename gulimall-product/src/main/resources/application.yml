@@ -5,11 +5,14 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://172.16.27.130:3306/gulimall_pms
+#    url: jdbc:mysql://192.168.1.7:3306/gulimall_pms
     url: jdbc:mysql://192.168.56.10:3306/gulimall_pms
     username: root
     password: 123
 
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   # nacos配置
   cloud:
     nacos:
@@ -17,6 +20,14 @@ spring:
         server-addr: 127.0.0.1:8848
   thymeleaf:
     cache: false
+
+  # redis配置
+  redis:
+    host: localhost
+    port: 6379
+
+  cache:
+    type: redis
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Dao.xml                # xml文件位置配置
