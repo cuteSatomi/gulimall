@@ -16,8 +16,8 @@ public class SearchParam {
     private Long catalog3Id;
     /** 排序条件 */
     private String sort;
-    /** 是否有库存 */
-    private Integer hasStock;
+    /** 是否有库存 0(无库存) 1(无库存) 默认有库存 */
+        private Integer hasStock = 1;
     /** 价格区间查询 */
     private String skuPrice;
     /** 品牌id */
@@ -25,6 +25,6 @@ public class SearchParam {
     /** 按照属性进行筛选 */
     private List<String> attrs;
     /** 当前页码 */
-    private Integer pageNum;
+    private Integer pageNum = 1;
 
 }

@@ -239,8 +239,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     SkuEsModel.Attrs attrs1 = new SkuEsModel.Attrs();
                     BeanUtils.copyProperties(item, attrs1);
                     return attrs1;
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
 
         // TODO 发送远程调用查询是否有库存
         Map<Long, Boolean> stockMap = null;
