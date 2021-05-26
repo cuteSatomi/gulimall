@@ -68,7 +68,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     /**
@@ -134,8 +134,10 @@ public class MallSearchServiceImpl implements MallSearchService {
             boolQuery.filter(rangeQuery);
         }
 
-        // 1.2、bool - filter 按照库存查询，由于vo里面赋了初始值，此处无需判断
-        boolQuery.filter(QueryBuilders.termQuery("hasStock", param.getHasStock().equals(1)));
+        // 1.2、bool - filter 按照库存查询
+        if(param.getHasStock()!=null){
+            boolQuery.filter(QueryBuilders.termQuery("hasStock", param.getHasStock().equals(1)));
+        }
         sourceBuilder.query(boolQuery);
 
         /* 排序，分页，高亮 */
@@ -152,6 +154,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         // 2.2、高亮
         if (!StringUtils.isEmpty(param.getKeyword())) {
             HighlightBuilder highlightBuilder = new HighlightBuilder();
+            // 对skuTitle字段的某个检索值进行高亮处理
             highlightBuilder.field("skuTitle");
             highlightBuilder.preTags("<b style='color:red'>");
             highlightBuilder.postTags("</b>");

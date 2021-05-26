@@ -16,8 +16,8 @@ public class SearchParam {
     private Long catalog3Id;
     /** 排序条件 */
     private String sort;
-    /** 是否有库存 0(无库存) 1(无库存) 默认有库存 */
-        private Integer hasStock = 1;
+    /** 是否有库存 0(无库存) 1(无库存) */
+        private Integer hasStock;
     /** 价格区间查询 */
     private String skuPrice;
     /** 品牌id */
