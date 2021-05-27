@@ -28,7 +28,15 @@ public class R extends HashMap<String, Object> {
         return this;
     }
 
-    public <T> T getData(TypeReference<T> typeReference){
+    public <T> T getData(String key, TypeReference<T> typeReference) {
+        Object data = get(key);
+        // 先把list集合转为json
+        String jsonString = JSON.toJSONString(data);
+        // 将json转为规定的饿泛型type
+        return JSON.parseObject(jsonString, typeReference);
+    }
+
+    public <T> T getData(TypeReference<T> typeReference) {
         Object data = get("data");
         // 先把list集合转为json
         String jsonString = JSON.toJSONString(data);

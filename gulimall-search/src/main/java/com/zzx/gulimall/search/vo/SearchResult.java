@@ -27,6 +27,16 @@ public class SearchResult {
     /** 当前查询到的结果：所有涉及到的属性 */
     private List<AttrVO> attrs;
 
+    /** 面包屑导航数据 */
+    private List<NavVO> navs;
+
+    @Data
+    public static class NavVO {
+        private String navName;
+        private String navValue;
+        private String link;
+    }
+
     @Data
     public static class BrandVO {
         private Long brandId;

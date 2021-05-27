@@ -1,10 +1,14 @@
 package com.zzx.gulimall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.zzx.common.to.es.SkuEsModel;
+import com.zzx.common.utils.R;
 import com.zzx.gulimall.search.config.GulimallElasticSearchConfig;
 import com.zzx.gulimall.search.constant.EsConstant;
+import com.zzx.gulimall.search.feign.ProductFeignService;
 import com.zzx.gulimall.search.service.MallSearchService;
+import com.zzx.gulimall.search.vo.AttrResponseVO;
 import com.zzx.gulimall.search.vo.SearchParam;
 import com.zzx.gulimall.search.vo.SearchResult;
 import org.apache.lucene.search.join.ScoreMode;
@@ -33,6 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +52,9 @@ public class MallSearchServiceImpl implements MallSearchService {
 
     @Autowired
     private RestHighLevelClient client;
+
+    @Autowired
+    private ProductFeignService productFeignService;
 
     /**
      * 到es中检索数据
@@ -135,7 +144,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         }
 
         // 1.2、bool - filter 按照库存查询
-        if(param.getHasStock()!=null){
+        if (param.getHasStock() != null) {
             boolQuery.filter(QueryBuilders.termQuery("hasStock", param.getHasStock().equals(1)));
         }
         sourceBuilder.query(boolQuery);
@@ -283,6 +292,38 @@ public class MallSearchServiceImpl implements MallSearchService {
                 (int) total / EsConstant.PRODUCT_PAGE_SIZE :
                 ((int) total / EsConstant.PRODUCT_PAGE_SIZE + 1);
         result.setTotalPages(totalPages);
+
+        // 8、构建面包屑导航功能
+        List<SearchResult.NavVO> navs = new ArrayList<>();
+        List<String> attrs = param.getAttrs();
+        if (attrs != null && attrs.size() > 0) {
+            navs = attrs.stream().map(attr -> {
+                SearchResult.NavVO navVO = new SearchResult.NavVO();
+                String[] s = attr.split("_");
+                navVO.setNavValue(s[1]);
+                R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                if (r.getCode() == 0) {
+                    AttrResponseVO data = r.getData("attr", new TypeReference<AttrResponseVO>() {
+                    });
+                    navVO.setNavName(data.getAttrName());
+                } else {
+                    navVO.setNavName(s[0]);
+                }
+
+                // 取消这个面包屑以后，将请求地址url的当前置空
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(attr, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String replace = param.get_queryString().replace("&attrs=" + encode, "");
+                navVO.setLink("http://search.gulimal.com?" + replace);
+
+                return navVO;
+            }).collect(Collectors.toList());
+        }
+        result.setNavs(navs);
 
         return result;
     }
