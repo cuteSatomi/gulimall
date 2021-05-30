@@ -1200,10 +1200,10 @@
             <div th:each="product:${result.products}">
               <div class="ico">
                 <i class="iconfont icon-weiguanzhu"></i>
-                <a href="/static/search#">关注</a>
+                <a href="#">关注</a>
               </div>
               <p class="da">
-                <a href="/static/search#" title="">
+                <a th:href="|http://item.gulimall.com/${product.skuId}.html|" title="">
                   <img th:src="${product.skuImg}" class="dim">
                 </a>
               </p>

@@ -5,6 +5,7 @@ import com.zzx.common.utils.PageUtils;
 import com.zzx.gulimall.product.entity.AttrGroupEntity;
 import com.zzx.gulimall.product.vo.request.AttrGroupRelationVO;
 import com.zzx.gulimall.product.vo.response.AttrGroupWithAttrsVO;
+import com.zzx.gulimall.product.vo.web.SkuItemVO;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
 
     /**
      * 删除分组和属性的关联
+     *
      * @param attrRelationVOS
      * @return
      */
@@ -31,9 +33,19 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
 
     /**
      * 查询该分类下所有分组，以及分组下所有属性的集合
+     *
      * @param catelogId
      * @return
      */
     List<AttrGroupWithAttrsVO> getAttrGroupWithAttrs(Long catelogId);
+
+    /**
+     * 根据三级分类和spuId查询出spu的规格参数信息
+     *
+     * @param spuId
+     * @param catalogId
+     * @return
+     */
+    List<SkuItemVO.SpuItemAttrGroupVO> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId);
 }
 

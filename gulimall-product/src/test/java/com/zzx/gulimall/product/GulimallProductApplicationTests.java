@@ -1,9 +1,12 @@
 package com.zzx.gulimall.product;
 
+import com.zzx.gulimall.product.dao.AttrGroupDao;
+import com.zzx.gulimall.product.dao.SkuSaleAttrValueDao;
 import com.zzx.gulimall.product.entity.AttrGroupEntity;
 import com.zzx.gulimall.product.entity.BrandEntity;
 import com.zzx.gulimall.product.service.BrandService;
 import com.zzx.gulimall.product.service.CategoryService;
+import com.zzx.gulimall.product.vo.web.SkuItemVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -26,6 +30,18 @@ public class GulimallProductApplicationTests {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private AttrGroupDao attrGroupDao;
+
+    @Autowired
+    private SkuSaleAttrValueDao skuSaleAttrValueDao;
+
+    @Test
+    public void test(){
+        List<SkuItemVO.SkuItemSaleAttrVO> saleAttrVOS = skuSaleAttrValueDao.getSaleAttrsBySpuId(2L);
+        System.out.println(saleAttrVOS);
+    }
 
     @Test
     public void testRedis() {

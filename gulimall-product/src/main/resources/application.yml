@@ -1,12 +1,20 @@
 server:
   port: 10000     # 端口
 
+# 线程池的配置
+gulimall:
+  config:
+    thread:
+      core-pool-size: 20
+      maximum-pool-size: 200
+      keep-alive-time: 10
+
 spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://192.168.1.7:3306/gulimall_pms
-    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms
+    url: jdbc:mysql:///gulimall_pms
+    #    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms
     username: root
     password: 123
 
