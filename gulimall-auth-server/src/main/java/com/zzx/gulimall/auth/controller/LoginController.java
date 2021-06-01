@@ -5,6 +5,7 @@ import com.zzx.common.constant.AuthServerConstant;
 import com.zzx.common.gulienum.BizCodeEnum;
 import com.zzx.common.utils.R;
 import com.zzx.gulimall.auth.feign.MemberFeignService;
+import com.zzx.gulimall.auth.vo.UserLoginVO;
 import com.zzx.gulimall.auth.vo.UserRegisterVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -83,10 +81,10 @@ public class LoginController {
                 R r = memberFeignService.register(vo);
                 if(r.getCode().equals(0)){
                     // 成功，返回登陆页面
-                    return "redirect:/login.html";
+                    return "redirect:http://auth.gulimall.com/login.html";
                 }else {
                     Map<String,String> errors = new HashMap<>();
-                    errors.put("msg",r.getData(new TypeReference<String>(){}));
+                    errors.put("msg",r.getData("msg",new TypeReference<String>(){}));
                     redirectAttributes.addFlashAttribute("errors",errors);
                     // 失败，返回注册页面
                     return "redirect:http://auth.gulimall.com/reg.html";
@@ -106,6 +104,21 @@ public class LoginController {
             redirectAttributes.addFlashAttribute("errors", errors);
             // 校验出错回到注册页面
             return "redirect:http://auth.gulimall.com/reg.html";
+        }
+    }
+
+    @PostMapping("/login")
+    public String login(UserLoginVO vo,RedirectAttributes redirectAttributes){
+        // 远程登录
+        R r = memberFeignService.login(vo);
+        if (r.getCode().equals(0)) {
+            // 成功
+            return "redirect:http://gulimall.com";
+        }else {
+            Map<String,String> errors = new HashMap<>();
+            errors.put("msg",r.getData("msg",new TypeReference<String>(){}));
+            redirectAttributes.addFlashAttribute("errors",errors);
+            return "redirect:http://auth.gulimall.com/login.html";
         }
     }
 }

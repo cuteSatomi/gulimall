@@ -5,6 +5,7 @@ import com.zzx.common.utils.PageUtils;
 import com.zzx.gulimall.member.entity.MemberEntity;
 import com.zzx.gulimall.member.exception.PhoneExistException;
 import com.zzx.gulimall.member.exception.UsernameExistException;
+import com.zzx.gulimall.member.vo.MemberLoginVO;
 import com.zzx.gulimall.member.vo.MemberRegisterVO;
 
 import java.util.Map;
@@ -41,5 +42,12 @@ public interface MemberService extends IService<MemberEntity> {
      * @throws UsernameExistException
      */
     void checkUsernameUnique(String username) throws UsernameExistException;
+
+    /**
+     * 登录方法
+     * @param vo
+     * @return
+     */
+    MemberEntity login(MemberLoginVO vo);
 }
 
