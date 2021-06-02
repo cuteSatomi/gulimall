@@ -36,6 +36,8 @@ spring:
 
   cache:
     type: redis
+  session:
+    store-type: redis
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Dao.xml                # xml文件位置配置

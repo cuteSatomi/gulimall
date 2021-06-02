@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.zzx.common.constant.AuthServerConstant;
 import com.zzx.common.gulienum.BizCodeEnum;
 import com.zzx.common.utils.R;
+import com.zzx.common.vo.MemberResponseVo;
 import com.zzx.gulimall.auth.feign.MemberFeignService;
 import com.zzx.gulimall.auth.vo.UserLoginVO;
 import com.zzx.gulimall.auth.vo.UserRegisterVO;
@@ -16,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,35 +74,36 @@ public class LoginController {
         String code = vo.getCode();
         String key = AuthServerConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone();
         String redisCode = redisTemplate.opsForValue().get(key);
-        if(StringUtils.isNotBlank(redisCode)){
+        if (StringUtils.isNotBlank(redisCode)) {
             // 如果redis中的验证码不为空，校验验证码是否正确
-            if(code.equals(redisCode.split("_")[0])){
+            if (code.equals(redisCode.split("_")[0])) {
                 // 校验通过，删除redis中的验证码
                 redisTemplate.delete(key);
                 // 调用远程服务注册
                 R r = memberFeignService.register(vo);
-                if(r.getCode().equals(0)){
+                if (r.getCode().equals(0)) {
                     // 成功，返回登陆页面
                     return "redirect:http://auth.gulimall.com/login.html";
-                }else {
-                    Map<String,String> errors = new HashMap<>();
-                    errors.put("msg",r.getData("msg",new TypeReference<String>(){}));
-                    redirectAttributes.addFlashAttribute("errors",errors);
+                } else {
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("msg", r.getData("msg", new TypeReference<String>() {
+                    }));
+                    redirectAttributes.addFlashAttribute("errors", errors);
                     // 失败，返回注册页面
                     return "redirect:http://auth.gulimall.com/reg.html";
                 }
-            }else {
+            } else {
                 // 校验不通过，返回注册页面
                 Map<String, String> errors = new HashMap<>();
-                errors.put("code","验证码错误");
+                errors.put("code", "验证码错误");
                 redirectAttributes.addFlashAttribute("errors", errors);
                 // 校验出错回到注册页面
                 return "redirect:http://auth.gulimall.com/reg.html";
             }
-        }else {
+        } else {
             // redis中验证码为空，返回注册页面
             Map<String, String> errors = new HashMap<>();
-            errors.put("code","验证码错误");
+            errors.put("code", "验证码错误");
             redirectAttributes.addFlashAttribute("errors", errors);
             // 校验出错回到注册页面
             return "redirect:http://auth.gulimall.com/reg.html";
@@ -108,16 +111,20 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginVO vo,RedirectAttributes redirectAttributes){
+    public String login(UserLoginVO vo, RedirectAttributes redirectAttributes, HttpSession session) {
         // 远程登录
         R r = memberFeignService.login(vo);
         if (r.getCode().equals(0)) {
             // 成功
+            MemberResponseVo data = r.getData("data", new TypeReference<MemberResponseVo>() {
+            });
+            session.setAttribute(AuthServerConstant.LOGIN_USER, data);
             return "redirect:http://gulimall.com";
-        }else {
-            Map<String,String> errors = new HashMap<>();
-            errors.put("msg",r.getData("msg",new TypeReference<String>(){}));
-            redirectAttributes.addFlashAttribute("errors",errors);
+        } else {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("msg", r.getData("msg", new TypeReference<String>() {
+            }));
+            redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:http://auth.gulimall.com/login.html";
         }
     }
