@@ -4,7 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.zzx.common.constant.AuthServerConstant;
 import com.zzx.common.gulienum.BizCodeEnum;
 import com.zzx.common.utils.R;
-import com.zzx.common.vo.MemberResponseVo;
+import com.zzx.common.vo.MemberResponseVO;
 import com.zzx.gulimall.auth.feign.MemberFeignService;
 import com.zzx.gulimall.auth.vo.UserLoginVO;
 import com.zzx.gulimall.auth.vo.UserRegisterVO;
@@ -116,7 +116,7 @@ public class LoginController {
         R r = memberFeignService.login(vo);
         if (r.getCode().equals(0)) {
             // 成功
-            MemberResponseVo data = r.getData("data", new TypeReference<MemberResponseVo>() {
+            MemberResponseVO data = r.getData("data", new TypeReference<MemberResponseVO>() {
             });
             session.setAttribute(AuthServerConstant.LOGIN_USER, data);
             return "redirect:http://gulimall.com";
