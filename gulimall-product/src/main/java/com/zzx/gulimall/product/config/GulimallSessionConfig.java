@@ -1,6 +1,7 @@
 package com.zzx.gulimall.product.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.session.web.http.CookieSerializer;
@@ -8,12 +9,13 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 
 /**
  * @author zzx
- * @date 2021-06-02 13:57
+ * @date 2021-06-03 11:37
  */
-//@Configuration
+@Configuration
 public class GulimallSessionConfig {
+
     @Bean
-    public CookieSerializer  cookieSerializer(){
+    public CookieSerializer cookieSerializer() {
         DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
         defaultCookieSerializer.setDomainName("gulimall.com");
         defaultCookieSerializer.setCookieName("GULISESSION");
@@ -21,7 +23,7 @@ public class GulimallSessionConfig {
     }
 
     @Bean
-    public RedisSerializer<Object> springSessionDefaultReidsSerializer(){
+    public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
         return new GenericJackson2JsonRedisSerializer();
     }
 }

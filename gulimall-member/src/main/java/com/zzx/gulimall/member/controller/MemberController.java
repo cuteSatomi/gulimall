@@ -9,6 +9,7 @@ import com.zzx.gulimall.member.exception.UsernameExistException;
 import com.zzx.gulimall.member.service.MemberService;
 import com.zzx.gulimall.member.vo.MemberLoginVO;
 import com.zzx.gulimall.member.vo.MemberRegisterVO;
+import com.zzx.gulimall.member.vo.SocialUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,23 @@ public class MemberController {
     @PostMapping("/login")
     public R login(@RequestBody MemberLoginVO vo) {
         MemberEntity member = memberService.login(vo);
+        if (member != null) {
+            return R.ok().setData(member);
+        } else {
+            return R.error(BizCodeEnum.LOGINACCT_PASSWORD_INVALID_EXCEPTION.getCode(),
+                    BizCodeEnum.LOGINACCT_PASSWORD_INVALID_EXCEPTION.getMsg());
+        }
+    }
+
+    /**
+     * 社交登录(微博登录)功能
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping("/oauth2/weibo/login")
+    public R login(@RequestBody SocialUser user) {
+        MemberEntity member = memberService.login(user);
         if (member != null) {
             return R.ok().setData(member);
         } else {

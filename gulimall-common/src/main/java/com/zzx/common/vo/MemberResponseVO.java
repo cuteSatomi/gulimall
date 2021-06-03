@@ -1,5 +1,6 @@
 package com.zzx.common.vo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,8 +9,11 @@ import java.util.Date;
 @Data
 public class MemberResponseVO implements Serializable {
 
-    private static final long serialVersionUID = 5573669251256409786L;
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * id
+     */
     private Long id;
     /**
      * 会员等级id

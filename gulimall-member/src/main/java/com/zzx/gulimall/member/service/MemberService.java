@@ -7,6 +7,7 @@ import com.zzx.gulimall.member.exception.PhoneExistException;
 import com.zzx.gulimall.member.exception.UsernameExistException;
 import com.zzx.gulimall.member.vo.MemberLoginVO;
 import com.zzx.gulimall.member.vo.MemberRegisterVO;
+import com.zzx.gulimall.member.vo.SocialUser;
 
 import java.util.Map;
 
@@ -49,5 +50,13 @@ public interface MemberService extends IService<MemberEntity> {
      * @return
      */
     MemberEntity login(MemberLoginVO vo);
+
+    /**
+     * 社交登录(微博登录)功能
+     *
+     * @param user
+     * @return
+     */
+    MemberEntity login(SocialUser user);
 }
 
