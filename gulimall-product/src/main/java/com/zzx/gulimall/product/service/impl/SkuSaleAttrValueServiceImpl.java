@@ -39,4 +39,15 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
         return baseMapper.getSaleAttrsBySpuId(spuId);
     }
 
+    /**
+     * 根据skuId获取该商品的销售属性，拼装成list集合
+     *
+     * @param skuId
+     * @return
+     */
+    @Override
+    public List<String> getSkuSaleAttrValueAsStringList(Long skuId) {
+        return baseMapper.getSkuSaleAttrValueAsStringList(skuId);
+    }
+
 }
