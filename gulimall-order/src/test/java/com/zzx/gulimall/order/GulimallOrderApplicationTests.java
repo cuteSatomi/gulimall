@@ -1,16 +1,27 @@
 package com.zzx.gulimall.order;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class GulimallOrderApplicationTests {
+public class GulimallOrderApplicationTests {
+
+    @Autowired
+    private AmqpAdmin amqpAdmin;
 
     @Test
-    void contextLoads() {
+    public void createExchange() {
+        DirectExchange directExchange = new DirectExchange("hello-java-exchange",true,false);
+        amqpAdmin.declareExchange(directExchange);
+        log.info("hello-java-exchange创建成功");
     }
 
 }

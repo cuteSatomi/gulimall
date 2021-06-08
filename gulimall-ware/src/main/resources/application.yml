@@ -12,8 +12,7 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///gulimall_wms
-#    url: jdbc:mysql://192.168.56.10:3306/gulimall_wms
+    url: jdbc:mysql:///gulimall_wms?serverTimezone=GMT%2B8
     username: root
     password: 123
 
