@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class OrderItemVO {
     private Long skuId;
+    private Boolean check;
     private String title;
     private String image;
     private List<String> skuAttr;

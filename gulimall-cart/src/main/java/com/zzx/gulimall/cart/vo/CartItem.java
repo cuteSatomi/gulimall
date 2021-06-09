@@ -3,6 +3,7 @@ package com.zzx.gulimall.cart.vo;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CartItem {
     private BigDecimal price;
     private Integer count;
     @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private BigDecimal totalPrice;
 
     /**

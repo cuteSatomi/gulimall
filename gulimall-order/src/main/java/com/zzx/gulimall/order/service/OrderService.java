@@ -6,6 +6,7 @@ import com.zzx.gulimall.order.entity.OrderEntity;
 import com.zzx.gulimall.order.vo.OrderConfirmVO;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 订单
@@ -22,6 +23,6 @@ public interface OrderService extends IService<OrderEntity> {
      * 订单确认页返回需要的数据
      * @return
      */
-    OrderConfirmVO confirmOrder();
+    OrderConfirmVO confirmOrder() throws ExecutionException, InterruptedException;
 }
 

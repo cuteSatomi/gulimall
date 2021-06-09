@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -178,6 +179,7 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 统计每个购物项的数量
+     *
      * @param skuId
      * @param num
      */
@@ -187,6 +189,34 @@ public class CartServiceImpl implements CartService {
         cartItem.setCount(num);
         BoundHashOperations<String, Object, Object> ops = getRedisOps();
         ops.put(skuId.toString(), JSON.toJSONString(cartItem));
+    }
+
+    /**
+     * 获取当前用户的购物车信息
+     *
+     * @return
+     */
+    @Override
+    public List<CartItem> getUserCartItems() {
+        UserInfoTO userInfoTo = CartInterceptor.threadLocal.get();
+        if (userInfoTo.getUserId() == null) {
+            return null;
+        } else {
+            String cartKey = REDIS_CART_PREFIX + userInfoTo.getUserId();
+            List<CartItem> cartItems = getCartItems(cartKey);
+            List<CartItem> collect = null;
+            if (cartItems != null && cartItems.size() > 0) {
+                collect = cartItems.stream().filter(CartItem::getCheck)
+                        .peek(cartItem -> {
+                            // 需要获取最新的price
+                            BigDecimal newPrice = productFeignService.getNewPrice(cartItem.getSkuId());
+                            cartItem.setPrice(newPrice);
+                        })
+                        .collect(Collectors.toList());
+            }
+
+            return collect;
+        }
     }
 
     /**

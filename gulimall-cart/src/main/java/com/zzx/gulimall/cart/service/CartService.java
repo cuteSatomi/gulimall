@@ -3,6 +3,7 @@ package com.zzx.gulimall.cart.service;
 import com.zzx.gulimall.cart.vo.Cart;
 import com.zzx.gulimall.cart.vo.CartItem;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -56,4 +57,11 @@ public interface CartService {
      * @param num
      */
     void countItem(Long skuId, Integer num);
+
+    /**
+     * 获取当前用户的购物车信息
+     *
+     * @return
+     */
+    List<CartItem> getUserCartItems();
 }

@@ -1,6 +1,9 @@
 package com.zzx.gulimall.order.vo;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,8 +28,27 @@ public class OrderConfirmVO {
     private Integer integration;
 
     /** 订单总额 */
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private BigDecimal total;
 
     /** 应付总额 */
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private BigDecimal payPrice;
+
+    public BigDecimal getTotal() {
+        BigDecimal sum = new BigDecimal("0");
+        if (items != null && items.size() > 0) {
+            for (OrderItemVO item : items) {
+                BigDecimal multiply = item.getPrice().multiply(BigDecimal.valueOf(item.getCount()));
+                sum = sum.add(multiply);
+            }
+        }
+        return total;
+    }
+
+    public BigDecimal getPayPrice() {
+        return getTotal();
+    }
 }
