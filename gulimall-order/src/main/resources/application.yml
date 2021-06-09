@@ -2,9 +2,18 @@
 server:
   port: 9000
 
+# 线程池的配置
+gulimall:
+  config:
+    thread:
+      core-pool-size: 20
+      maximum-pool-size: 200
+      keep-alive-time: 10
+
 spring:
   application:
     name: gulimall-order
+
 
   # 数据源配置
   datasource:
@@ -18,6 +27,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  redis:
+    host: localhost
+    port: 6379
 
 mybatis-plus:
   # xml文件位置配置
