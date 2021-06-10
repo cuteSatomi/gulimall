@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单确认页需要用的数据
@@ -27,6 +28,11 @@ public class OrderConfirmVO {
     /** 优惠券 */
     private Integer integration;
 
+    private Map<Long, Boolean> stocks;
+
+    /** 防重令牌 */
+    private String orderToken;
+
     /** 订单总额 */
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -37,6 +43,16 @@ public class OrderConfirmVO {
     @Setter(AccessLevel.NONE)
     private BigDecimal payPrice;
 
+    public Integer getCount() {
+        Integer count = 0;
+        if (items != null && items.size() > 0) {
+            for (OrderItemVO item : items) {
+                count += item.getCount();
+            }
+        }
+        return count;
+    }
+
     public BigDecimal getTotal() {
         BigDecimal sum = new BigDecimal("0");
         if (items != null && items.size() > 0) {
@@ -45,7 +61,7 @@ public class OrderConfirmVO {
                 sum = sum.add(multiply);
             }
         }
-        return total;
+        return sum;
     }
 
     public BigDecimal getPayPrice() {

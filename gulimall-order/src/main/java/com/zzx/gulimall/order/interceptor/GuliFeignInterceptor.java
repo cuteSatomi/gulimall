@@ -16,15 +16,17 @@ import javax.servlet.http.HttpServletRequest;
 public class GuliFeignInterceptor {
 
     @Bean("requestInterceptor")
-    public RequestInterceptor requestInterceptor(){
+    public RequestInterceptor requestInterceptor() {
         return template -> {
             ServletRequestAttributes attributes =
                     (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            if(request!=null){
-                String cookie = request.getHeader("Cookie");
-                // 为spring生成的feign请求加上cookie
-                template.header("Cookie",cookie);
+            if (attributes != null) {
+                HttpServletRequest request = attributes.getRequest();
+                if (request != null) {
+                    String cookie = request.getHeader("Cookie");
+                    // 为spring生成的feign请求加上cookie
+                    template.header("Cookie", cookie);
+                }
             }
         };
     }

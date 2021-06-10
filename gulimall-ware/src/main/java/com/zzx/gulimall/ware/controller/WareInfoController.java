@@ -1,19 +1,15 @@
 package com.zzx.gulimall.ware.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.zzx.gulimall.ware.entity.WareInfoEntity;
-import com.zzx.gulimall.ware.service.WareInfoService;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.R;
+import com.zzx.gulimall.ware.entity.WareInfoEntity;
+import com.zzx.gulimall.ware.service.WareInfoService;
+import com.zzx.gulimall.ware.vo.FareVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -29,6 +25,12 @@ import com.zzx.common.utils.R;
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
+
+    @GetMapping("/getFare")
+    public R getFare(@RequestParam("addrId") Long addrId){
+        FareVO fare = wareInfoService.getFare(addrId);
+        return R.ok().setData(fare);
+    }
 
     /**
      * 列表
