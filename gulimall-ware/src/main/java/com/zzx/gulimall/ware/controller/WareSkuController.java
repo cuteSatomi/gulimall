@@ -1,10 +1,12 @@
 package com.zzx.gulimall.ware.controller;
 
+import com.zzx.common.gulienum.BizCodeEnum;
 import com.zzx.common.to.SkuHasStockTO;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.R;
 import com.zzx.gulimall.ware.entity.WareSkuEntity;
 import com.zzx.gulimall.ware.service.WareSkuService;
+import com.zzx.gulimall.ware.vo.WareSkuLockVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,16 @@ public class WareSkuController {
         List<SkuHasStockTO> vos = wareSkuService.getSkusHasStock(skuIds);
 
         return R.ok().setData(vos);
+    }
+
+    @PostMapping("/order/lock")
+    public R orderLockStock(@RequestBody WareSkuLockVO vo) {
+        try {
+            Boolean stock = wareSkuService.orderLockStock(vo);
+            return R.ok();
+        } catch (Exception e) {
+            return R.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(), BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
+        }
     }
 
     /**

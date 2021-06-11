@@ -285,13 +285,26 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         // TODO 将数据发送给es进行保存
         R r = searchFeignService.productStatusUp(upProducts);
-        if(r.getCode().equals(0)){
+        if (r.getCode().equals(0)) {
             // 远程调用成功
             // TODO 将spu状态改为已上架
             baseMapper.updateSpuStatus(spuId, ProductConstant.StatusEnum.SPU_UP.getCode());
-        }else {
+        } else {
 
         }
+    }
+
+    /**
+     * 根据skuId查询出spu的信息
+     *
+     * @param skuId
+     * @return
+     */
+    @Override
+    public SpuInfoEntity getSpuInfoBySkuId(Long skuId) {
+        SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
+        SpuInfoEntity spuInfo = getById(skuInfo.getSpuId());
+        return spuInfo;
     }
 
 
