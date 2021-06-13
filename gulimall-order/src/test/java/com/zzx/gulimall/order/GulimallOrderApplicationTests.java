@@ -4,10 +4,7 @@ import com.zzx.gulimall.order.entity.OrderReturnReasonEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,6 +39,13 @@ public class GulimallOrderApplicationTests {
         DirectExchange directExchange = new DirectExchange("hello-java-exchange", true, false);
         amqpAdmin.declareExchange(directExchange);
         log.info("hello-java-exchange创建成功");
+    }
+
+    @Test
+    public void orderDelayQueue() {
+        Binding binding = new Binding("order.release.order.queue", Binding.DestinationType.QUEUE,
+                "order-event-exchange", "order.release.order", null);
+        amqpAdmin.declareBinding(binding);
     }
 
     @Test

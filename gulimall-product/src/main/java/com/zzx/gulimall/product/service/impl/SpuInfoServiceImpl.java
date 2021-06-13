@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zzx.common.constant.ProductConstant;
-import com.zzx.common.to.SkuHasStockTO;
-import com.zzx.common.to.SkuReductionTO;
-import com.zzx.common.to.SpuBoundTO;
+import com.zzx.common.to.SkuHasStockTo;
+import com.zzx.common.to.SkuReductionTo;
+import com.zzx.common.to.SpuBoundTo;
 import com.zzx.common.to.es.SkuEsModel;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.Query;
@@ -121,7 +121,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         // 保存spu的积分信息
         Bounds bounds = vo.getBounds();
-        SpuBoundTO spuBoundTO = new SpuBoundTO();
+        SpuBoundTo spuBoundTO = new SpuBoundTo();
         BeanUtils.copyProperties(bounds, spuBoundTO);
         spuBoundTO.setSpuId(infoEntity.getId());
         couponFeignService.saveBounds(spuBoundTO);
@@ -168,7 +168,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 skuSaleAttrValueService.saveBatch(skuSaleAttrValueEntities);
 
                 // sku的优惠，满减等信息
-                SkuReductionTO skuReductionTO = new SkuReductionTO();
+                SkuReductionTo skuReductionTO = new SkuReductionTo();
                 BeanUtils.copyProperties(item, skuReductionTO);
                 skuReductionTO.setSkuId(skuId);
                 couponFeignService.saveSkuReduction(skuReductionTO);
@@ -245,9 +245,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         Map<Long, Boolean> stockMap = null;
         try {
             R r = wareFeignService.getSkusHasStock(skuIdList);
-            TypeReference<List<SkuHasStockTO>> typeReference = new TypeReference<List<SkuHasStockTO>>() {
+            TypeReference<List<SkuHasStockTo>> typeReference = new TypeReference<List<SkuHasStockTo>>() {
             };
-            stockMap = r.getData(typeReference).stream().collect(Collectors.toMap(SkuHasStockTO::getSkuId, item -> item.getHasStock()));
+            stockMap = r.getData(typeReference).stream().collect(Collectors.toMap(SkuHasStockTo::getSkuId, item -> item.getHasStock()));
         } catch (Exception e) {
             log.error("远程查询库存服务出现异常，原因{}", e);
         }

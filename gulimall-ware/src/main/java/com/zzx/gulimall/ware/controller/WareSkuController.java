@@ -1,7 +1,7 @@
 package com.zzx.gulimall.ware.controller;
 
 import com.zzx.common.gulienum.BizCodeEnum;
-import com.zzx.common.to.SkuHasStockTO;
+import com.zzx.common.to.SkuHasStockTo;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.R;
 import com.zzx.gulimall.ware.entity.WareSkuEntity;
@@ -36,7 +36,7 @@ public class WareSkuController {
      */
     @PostMapping("/hasstock")
     public R getSkusHasStock(@RequestBody List<Long> skuIds) {
-        List<SkuHasStockTO> vos = wareSkuService.getSkusHasStock(skuIds);
+        List<SkuHasStockTo> vos = wareSkuService.getSkusHasStock(skuIds);
 
         return R.ok().setData(vos);
     }

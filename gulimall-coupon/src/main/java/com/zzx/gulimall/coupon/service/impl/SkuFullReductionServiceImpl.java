@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zzx.common.to.MemberPrice;
-import com.zzx.common.to.SkuReductionTO;
+import com.zzx.common.to.SkuReductionTo;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.Query;
 import com.zzx.gulimall.coupon.dao.SkuFullReductionDao;
@@ -48,7 +48,7 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
      * @param reductionTO
      */
     @Override
-    public void saveSkuReduction(SkuReductionTO reductionTO) {
+    public void saveSkuReduction(SkuReductionTo reductionTO) {
         // sms_sku_ladder
         SkuLadderEntity skuLadderEntity = new SkuLadderEntity();
         skuLadderEntity.setSkuId(reductionTO.getSkuId());

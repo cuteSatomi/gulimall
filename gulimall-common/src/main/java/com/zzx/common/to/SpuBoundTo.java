@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @date 2021-05-12 10:29:58
  */
 @Data
-public class SpuBoundTO {
+public class SpuBoundTo {
     private Long spuId;
     private BigDecimal buyBounds;
     private BigDecimal growBounds;

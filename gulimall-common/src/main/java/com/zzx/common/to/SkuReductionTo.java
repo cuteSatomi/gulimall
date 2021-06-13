@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2021-05-12 15:43:56
  */
 @Data
-public class SkuReductionTO {
+public class SkuReductionTo {
     private Long skuId;
     private int fullCount;
     private BigDecimal discount;

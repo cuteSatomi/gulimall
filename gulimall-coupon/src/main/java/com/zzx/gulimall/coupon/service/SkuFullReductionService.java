@@ -1,7 +1,7 @@
 package com.zzx.gulimall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zzx.common.to.SkuReductionTO;
+import com.zzx.common.to.SkuReductionTo;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.gulimall.coupon.entity.SkuFullReductionEntity;
 
@@ -23,6 +23,6 @@ public interface SkuFullReductionService extends IService<SkuFullReductionEntity
      *
      * @param skuReductionTO
      */
-    void saveSkuReduction(SkuReductionTO skuReductionTO);
+    void saveSkuReduction(SkuReductionTo skuReductionTO);
 }
 

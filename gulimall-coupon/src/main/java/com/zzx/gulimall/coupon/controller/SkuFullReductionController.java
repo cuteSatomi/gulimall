@@ -1,6 +1,6 @@
 package com.zzx.gulimall.coupon.controller;
 
-import com.zzx.common.to.SkuReductionTO;
+import com.zzx.common.to.SkuReductionTo;
 import com.zzx.common.utils.PageUtils;
 import com.zzx.common.utils.R;
 import com.zzx.gulimall.coupon.entity.SkuFullReductionEntity;
@@ -31,7 +31,7 @@ public class SkuFullReductionController {
      */
     @PostMapping("/saveInfo")
     // @RequiresPermissions("coupon:skufullreduction:list")
-    public R saveInfo(@RequestBody SkuReductionTO skuReductionTO){
+    public R saveInfo(@RequestBody SkuReductionTo skuReductionTO){
         skuFullReductionService.saveSkuReduction(skuReductionTO);
 
         return R.ok();

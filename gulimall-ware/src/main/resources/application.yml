@@ -8,7 +8,6 @@ spring:
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -21,6 +20,15 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
+  rabbitmq:
+    host: localhost
+    virtual-host: /
+    listener:
+      simple:
+        # 手动ack
+        acknowledge-mode: manual
+
 
 mybatis-plus:
   # xml文件位置配置
